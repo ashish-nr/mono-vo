@@ -35,10 +35,10 @@ using namespace std;
 // IMP: Change the file directories (4 places) according to where your dataset is saved before running!
 
 double getAbsoluteScale(int frame_id, int sequence_id, double z_cal)	{
-  
+
   string line;
   int i = 0;
-  ifstream myfile ("/home/avisingh/Datasets/KITTI_VO/00.txt");
+  ifstream myfile ( "/home/a/Programming/datasets/KITTI/odometry/poses/00.txt"/*"/home/avisingh/Datasets/KITTI_VO/00.txt"*/);
   double x =0, y=0, z = 0;
   double x_prev, y_prev, z_prev;
   if (myfile.is_open())
@@ -74,7 +74,7 @@ double getAbsoluteScale(int frame_id, int sequence_id, double z_cal)	{
 int main( int argc, char** argv )	{
 
   Mat img_1, img_2;
-  Mat R_f, t_f; //the final rotation and tranlation vectors containing the 
+  Mat R_f, t_f; //the final rotation and tranlation vectors containing the
 
   ofstream myfile;
   myfile.open ("results1_1.txt");
@@ -82,20 +82,20 @@ int main( int argc, char** argv )	{
   double scale = 1.00;
   char filename1[200];
   char filename2[200];
-  sprintf(filename1, "/home/avisingh/Datasets/KITTI_VO/00/image_2/%06d.png", 0);
-  sprintf(filename2, "/home/avisingh/Datasets/KITTI_VO/00/image_2/%06d.png", 1);
+  sprintf(filename1, "/home/a/Programming/datasets/KITTI/odometry/sequences/00/image_2/%06d.png"/*"/home/avisingh/Datasets/KITTI_VO/00/image_2/%06d.png"*/, 0);
+  sprintf(filename2, "/home/a/Programming/datasets/KITTI/odometry/sequences/00/image_2/%06d.png"/*"/home/avisingh/Datasets/KITTI_VO/00/image_2/%06d.png"*/, 1);
 
   char text[100];
   int fontFace = FONT_HERSHEY_PLAIN;
   double fontScale = 1;
-  int thickness = 1;  
+  int thickness = 1;
   cv::Point textOrg(10, 50);
 
   //read the first two frames from the dataset
   Mat img_1_c = imread(filename1);
   Mat img_2_c = imread(filename2);
 
-  if ( !img_1_c.data || !img_2_c.data ) { 
+  if ( !img_1_c.data || !img_2_c.data ) {
     std::cout<< " --(!) Error reading images " << std::endl; return -1;
   }
 
@@ -111,8 +111,8 @@ int main( int argc, char** argv )	{
 
   //TODO: add a fucntion to load these values directly from KITTI's calib files
   // WARNING: different sequences in the KITTI VO dataset have different intrinsic/extrinsic parameters
-  double focal = 718.8560;
-  cv::Point2d pp(607.1928, 185.2157);
+  double focal = /*458;*/718.8560;
+  cv::Point2d pp(/*367.215, 248.375*/607.1928, 185.2157);
   //recovering the pose and the essential matrix
   Mat E, R, t, mask;
   E = findEssentialMat(points2, points1, focal, pp, RANSAC, 0.999, 1.0, mask);
@@ -136,7 +136,7 @@ int main( int argc, char** argv )	{
   Mat traj = Mat::zeros(600, 600, CV_8UC3);
 
   for(int numFrame=2; numFrame < MAX_FRAME; numFrame++)	{
-  	sprintf(filename, "/home/avisingh/Datasets/KITTI_VO/00/image_2/%06d.png", numFrame);
+  	sprintf(filename, "/home/a/Programming/datasets/KITTI/odometry/sequences/00/image_2/%06d.png"/*"/home/avisingh/Datasets/KITTI_VO/00/image_2/%06d.png"*/, numFrame);
     //cout << numFrame << endl;
   	Mat currImage_c = imread(filename);
   	cvtColor(currImage_c, currImage, COLOR_BGR2GRAY);
